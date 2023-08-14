@@ -8,4 +8,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+void display_prompt(char *command);
+
 #endif
