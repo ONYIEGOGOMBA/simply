@@ -8,6 +8,12 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-void display_prompt(char *command);
+#define MAX_INPUT_LENGTH 100
+#define MAX_ARGS 10
+
+void display_prompt(char *input);
+void parseArguments(char *input, char **args);
+
+
 
 #endif
