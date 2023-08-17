@@ -7,10 +7,10 @@
  */
 void display_prompt(char *input)
 {
+	pid_t child_pid = fork();
 	char *args[MAX_ARGS];
 
 	parseArguments(input, args);
-	pid_t child_pid = fork();
 
 	if (child_pid == -1)
 	{
