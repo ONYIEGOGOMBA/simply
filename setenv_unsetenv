@@ -1,0 +1,9 @@
+#!/bin/bash
+# Set the environment variable "HOME" to the value "/home/user"
+setenv HOME /home/user
+# Print the value of the environment variable "HOME"
+echo $HOME
+# Unset the environment variable "HOME"
+unsetenv HOME
+# Print the value of the environment variable "HOME"
+echo $HOME
