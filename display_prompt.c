@@ -1,34 +1,64 @@
 #include "shell.h"
-#define MAX_INPUT_LENGTH 100
-#define MAX_ARGS 10
+
 /**
- * display_prompt- a function that displays a prompt.
- * @input:argument.
+ * main- displays a prompt.
+ * Return:0 always.
  */
-void display_prompt(char *input)
+int main(void)
 {
-	pid_t child_pid = fork();
-	char *args[MAX_ARGS];
+	char *user_input = NULL;
+	size_t input_size = 0;
+	ssize_t input_length;
+	char *env_variables[] = {NULL};
 
-	parseArguments(input, args);
+	while (1)
+	{
+		printf("simpleSimple$ ");
+		input_length = getline(&user_input, &input_size, stdin);
+		if (input_length == -1)
+		{
+			if (input_size > 0)
+			{
+				printf("\nexiting!\n");
+			}
+			break;
+		}
+		user_input[input_length - 1] = '\0';
+		if (input_length > 1)
+		{
+			pid_t pid = fork();
 
-	if (child_pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	if (child_pid == 0)
-	{
-		char *args[2];
+			if (pid == -1)
+			{
+				perror("fork");
+				exit(EXIT_FAILURE);
+			}
+			else if (pid == 0)
+			{
+				char *command = user_input;
 
-		args[0] = input;
-		args[1] = NULL;
-		execve(args[0], args, NULL);
-		perror("execve");
-		exit(EXIT_FAILURE);
+				char **argv = (char **)malloc(2 * sizeof(char *));
+
+				if (argv == NULL)
+				{
+					perror("malloc");
+					exit(EXIT_FAILURE);
+				}
+				argv[0] = command;
+				argv[1] = NULL;
+				if (execve(command, argv, env_variables) == -1)
+				{
+					perror("execve");
+					exit(EXIT_FAILURE);
+				}
+				free(argv);
+			}
+			else
+			{
+				wait(NULL);
+			}
+		}
 	}
-	else
-	{
-		wait(NULL);
-	}
+	free(user_input);
+	return (0);
 }
