@@ -11,8 +11,9 @@
 #define MAX_INPUT_LENGTH 100
 #define MAX_ARGS 10
 
-void display_prompt(char *input);
 void parseArguments(char *input, char **args);
+void display_prompt(char **user_input, size_t *input_size);
+void execute_prompt(char *command);
 
 
 
