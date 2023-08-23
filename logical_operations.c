@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/wait.h>
-#include "shell.h"
+#include <sys/types.h>
 /**
- * print_error - prints msg
- * execute_command - It executes the command
- * Return: It returns 1
+ * print_error - it prints the msg
+ * execute_command - it executes the given command.
+ * Return: Returns num.
  */
+
 void print_error(const char *msg)
 {
 	perror(msg);
@@ -19,13 +19,13 @@ int execute_command(char *command)
 {
 	char *args[1024];
 	int arg_count = 0;
-	char *token = strtok(command, "\t\n");
+	char *token = strtok(command, " \t\n");
 	pid_t pid = fork();
 
 	while (token != NULL)
 	{
 		args[arg_count++] = token;
-		token = strtok(NULL, "\t\n");
+		token = strtok(NULL, " \t\n");
 	}
 	args[arg_count] = NULL;
 
@@ -60,8 +60,8 @@ int execute_command(char *command)
 	}
 }
 /**
- * main - It has the function
- * Return: always 0
+ * main - prints the executed command
+ * Return: Always 0
  */
 
 int main(void)
@@ -70,17 +70,38 @@ int main(void)
 	printf("Shell> ");
 	while (fgets(input, sizeof(input), stdin) != NULL)
 	{
-		char *command = strtok(input, ";");
+		char *command = strtok(input, "&&\n");
+		int success = 1;
+
 		while (command != NULL)
 		{
 			int result = execute_command(command);
-			if (result != 0)
+
+			if (strstr(command, "||"))
 			{
-				fprintf(stderr, "command failed: %s\n", command);
+				if (result != 0)
+				{
+					success = 0;
+					break;
+				}
 			}
-			command = strtok(NULL, ";");
+			else if (result != 0)
+			{
+				success = 0;
+				break;
+			}
+			command = strtok(NULL, "&&\n");
 		}
-		printf("Shell> ");
+
+		if (success)
+		{
+			printf("ALL commands succeeded.\n");
+		}
+		else
+		{
+			fprintf(stderr, "Some command(s) failed.\n");
+		}
+		printf("shell> ");
 	}
 	return (0);
 }
