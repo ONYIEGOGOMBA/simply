@@ -46,7 +46,8 @@ void display_prompt(char **user_input, size_t *input_size)
 	{
 		if (*input_size > 0)
 		{
-			printf("\nexiting!\n");
+			/*printf("\nexiting!\n");*/
+			write(1, "exiting\n", 8);
 		}
 		free(*user_input);
 		*user_input = NULL;
