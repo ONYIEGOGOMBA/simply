@@ -15,5 +15,9 @@ void parseArguments(char *input, char **args);
 void display_prompt(char **user_input, size_t *input_size);
 void execute_prompt(char *command);
 
+int _myhelp(ino_t *info);
+int _mycd(ino_t *info);
+int _myexit(ino_t *info);
+
 
 #endif
