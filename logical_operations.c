@@ -6,7 +6,7 @@
 #include <sys/types.h>
 /**
  * print_error - it prints the msg
- * execute_command - it executes the given command.
+ * @msg: printed msg
  * Return: Returns num.
  */
 
@@ -14,7 +14,11 @@ void print_error(const char *msg)
 {
 	perror(msg);
 }
-
+/**
+ * execute_command - it executes the given command.
+ * @command: executed
+ * Return: returns 1
+ */
 int execute_command(char *command)
 {
 	char *args[1024];
@@ -28,12 +32,10 @@ int execute_command(char *command)
 		token = strtok(NULL, " \t\n");
 	}
 	args[arg_count] = NULL;
-
 	if (arg_count == 0)
 	{
 		return (0);
 	}
-
 	if (pid < 0)
 	{
 		print_error("fork");
@@ -48,6 +50,7 @@ int execute_command(char *command)
 	else
 	{
 		int status;
+
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
@@ -60,37 +63,50 @@ int execute_command(char *command)
 	}
 }
 /**
+ * execute_logical_operators - It handles logical operators
+ * @commands: it handles individual command execution.
+ * Return: It returns a succees message
+ */
+int execute_logical_operators(char *commands)
+{
+	int success = 1;
+	char *command = strtok(commands, "&&\n");
+
+	while (command != NULL)
+	{
+		int result = execute_command(command);
+
+		if (strstr(command, "||"))
+		{
+			if (result != 0)
+			{
+				success = 0;
+				break;
+			}
+		}
+		else if (result != 0)
+		{
+			success = 0;
+			break;
+		}
+		command = strtok(NULL, "&&\n");
+	}
+	return (success);
+}
+/**
  * main - prints the executed command
  * Return: Always 0
  */
 
 int main(void)
 {
+	int success;
 	char input[1024];
+
 	printf("Shell> ");
 	while (fgets(input, sizeof(input), stdin) != NULL)
 	{
-		char *command = strtok(input, "&&\n");
-		int success = 1;
-
-		while (command != NULL)
-		{
-			int result = execute_command(command);
-
-			if (strstr(command, "||"))
-			{
-				if (result != 0)
-				{
-					success = 0;
-					break;
-				}
-			}
-			else if (result != 0)
-			{
-				success = 0;
-				break;
-			}
-			command = strtok(NULL, "&&\n");
+		int success = execute_logical_operators(input);
 		}
 
 		if (success)

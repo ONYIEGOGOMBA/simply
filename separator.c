@@ -7,14 +7,18 @@
 #include "shell.h"
 /**
  * print_error - prints msg
- * execute_command - It executes the command
- * Return: It returns 1
+ * @msg: The message printed
+ * Return: It returns msg
  */
 void print_error(const char *msg)
 {
 	perror(msg);
 }
-
+/**
+ * execute_command - It executes the command
+ * @command: character
+ * Return: returns 1
+ */
 int execute_command(char *command)
 {
 	char *args[1024];
@@ -28,12 +32,10 @@ int execute_command(char *command)
 		token = strtok(NULL, "\t\n");
 	}
 	args[arg_count] = NULL;
-
 	if (arg_count == 0)
 	{
 		return (0);
 	}
-
 	if (pid < 0)
 	{
 		print_error("fork");
@@ -48,6 +50,7 @@ int execute_command(char *command)
 	else
 	{
 		int status;
+
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
@@ -67,13 +70,16 @@ int execute_command(char *command)
 int main(void)
 {
 	char input[1024];
+
 	printf("Shell> ");
 	while (fgets(input, sizeof(input), stdin) != NULL)
 	{
 		char *command = strtok(input, ";");
+
 		while (command != NULL)
 		{
 			int result = execute_command(command);
+
 			if (result != 0)
 			{
 				fprintf(stderr, "command failed: %s\n", command);
