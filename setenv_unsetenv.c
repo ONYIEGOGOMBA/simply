@@ -8,49 +8,69 @@
 
 /**
  * print_error - prints msg.
- * *msg - printed.
- * main - prints the commands.
- * Return: returns given command
+ * @msg: printed message
  */
-void print_error(const char *msg)
+void print_error(const char char *msg)
 {
 	perror(msg);
 }
-
-int main(command, variable, value, argc, argv)
-	int argc;
-	char *argv[];
-
-	const char *command;
-	const char *variable;
-	const char *value;
-
+/**
+ * handle_setenv - calls the handler
+ * @variable: a character
+ * @value: a character
+ * Return: always 0
+ */
+int handle_setenv(const char *variable, const char *value)
+{
+	if (setenv(variable, value, 1) != 0)
+	{
+		print_error("setenv");
+		return (1);
+	}
+	return (0);
+}
+/**
+ * handle_unsetenv - calls the handler
+ * @variable: a character
+ * Return: returns 0
+ */
+int handle_unsetenv(const char *variable)
+{
+	if (unsetenv(variable) != 0)
+	{
+		print_error("unsetenv");
+		return (1);
+	}
+	return (0);
+}
+/**
+ * main - starts the loop
+ * @argc: integer
+ * @argv: character
+ * Return: returns a value
+ */
+int main(int argc, char *argv[])
 {
 	if (argc < 2)
 	{
 		print_error("Usage: ./env_commands setenv VARIABLE VALUE\n"
-				" ./env_commands unsetenv VARIABLE");
+				"./env_commands unsetenv VARIABLE");
 		return (1);
 	}
-	command = argv[1];
-	variable = argv[2];
-	value = argv[3];
+	const cahr *command = argv[1];
 
 	if (strcmp(command, "setenv") == 0)
 	{
 		if (argc != 4)
 		{
-			print_error("Usage: ./env_commands setenv VARIABLE VALUE");
+			print_error("Usage: ./env_commands unsetenv VARIABLE");
 			return (1);
 		}
-		variable = argv[2];
-		value = argv[3];
+		const char *variable = argv[2];
 
-		if (setenv(variable, value, 1) != 0)
-		{
-			print_error("setenv");
-			return (1);
-		}
+		const char *value = argv[3];
+
+		return (handle_setenv(variable, value));
 	}
 	else if (strcmp(command, "unsetenv") == 0)
 	{
@@ -59,13 +79,9 @@ int main(command, variable, value, argc, argv)
 			print_error("Usage: ./env_commands unsetenv VARIABLE");
 			return (1);
 		}
-		variable = argv[2];
+		const char *variable = argv[2];
 
-		if (unsetenv(variable) != 0)
-		{
-			print_error("unsetenv");
-			return (1);
-		}
+		return (handle_unsetenv(variable));
 	}
 	else
 	{
