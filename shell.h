@@ -16,5 +16,4 @@ void display_prompt(char **user_input, size_t *input_size);
 void execute_prompt(char *command);
 
 
-
 #endif

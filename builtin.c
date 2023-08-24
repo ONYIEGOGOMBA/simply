@@ -1,4 +1,8 @@
 #include "shell.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
 
 /**
  * _myexit - exits the shell
@@ -7,7 +11,7 @@
  *         (0) if info.argv[0] != "exit"
  */
 
-int _myexit(info_t *info)
+int _myexit(ino_t *info)
 {
 	int exit;
 
@@ -36,7 +40,7 @@ int _myexit(info_t *info)
  *  Return: Always 0
  */
 
-int _mycd(info_t *info)
+int _mycd(ino_t *info)
 {
 	char *b, *dr, buffer[1024];
 	int chdir_rent;
@@ -61,8 +65,7 @@ int _mycd(info_t *info)
 			return (1);
 		}
 		_puts(_getenv(info, "OLDPWD=")), _putchar('\n');
-		chdir_ret = 
-			chdir((dr = _getenv(info, "OLDPWD=")) ? dr : "/");
+		chdir_ret = chdir((dr = _getenv(info, "OLDPWD=")) ? dr : "/");
 	}
 	else
 		chdir_rent = chdir(info->argv[1]);
@@ -84,7 +87,7 @@ int _mycd(info_t *info)
  * @info: Structure containing potential arguments.
  *  Return: Always 0
  */
-int _myhelp(info_t *info)
+int _myhelp(ino_t *info)
 {
 	char **bog_mm;
 
