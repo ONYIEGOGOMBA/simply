@@ -10,10 +10,13 @@ int main(void)
 	char *user_input = NULL;
 	size_t input_size = 0;
 	char *args[MAX_ARGS];
+	int ten = isatty(0);
 
 	while (1)
 	{
-		printf("#simpleShell$ ");
+		if (ten == 1)
+		write(1, "$ ", 2);
+		/*printf("#simpleShell$ ");*/
 		display_prompt(&user_input, &input_size);
 		if (user_input == NULL)
 		{
