@@ -19,5 +19,8 @@ int _myhelp(ino_t *info);
 int _mycd(ino_t *info);
 int _myexit(ino_t *info);
 
+int custom_unset_env_builtin(char *data);
+int custom_set_env_builtin(char *data);
+int custom_env_builtin(char *data);
 
 #endif
